@@ -50,3 +50,10 @@ python src/10_create_regime_tables.py
 python src/11_nlp_regression.py
 python src/12_create_tables2_3.py
 python src/13_build_final_notebook.py
+
+```
+
+## References
+
+- Rigobon, R. (2003). Identification Through Heteroskedasticity.
+- Rigobon, R., and Sack, B. (2005). The Effects of War Risk on U.S. Financial Markets.
