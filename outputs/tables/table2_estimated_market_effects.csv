@@ -1,0 +1,11 @@
+Financial Variable,Units,Estimator 1,Estimator 2,Combined IV,95% CI Low,95% CI High,Significant at 5%
+10-Year Treasury Yield,Basis-point change,-7.054,-7.144,-6.944,-11.855,-3.681,True
+S&P 500,Percent change,-1.054,-2.331,-1.442,-4.227,1.67,False
+Global Equity,Percent change,-1.094,-1.972,-1.351,-3.938,1.806,False
+Investment-Grade Bonds,Percent change,0.014,-24.264,0.344,-0.116,1.365,False
+High-Yield Bonds,Percent change,-0.053,-0.345,-0.069,-0.541,0.777,False
+Inflation-Linked Bonds,Percent change,0.134,-0.7,0.333,0.09,1.074,True
+Brent Oil,Percent change,-8.165,-9.426,-9.155,-22.633,8.213,False
+Gold,Percent change,-0.664,-154.321,-5.611,-53.241,41.656,False
+U.S. Dollar Index,Percent change,0.217,3.101,0.473,-1.592,2.158,False
+VIX,Percent change,8.449,32.089,13.558,-24.355,40.274,False

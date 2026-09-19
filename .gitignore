@@ -5,5 +5,4 @@ __pycache__/
 .env
 data/raw/
 data/interim/
-outputs/
 .DS_Store

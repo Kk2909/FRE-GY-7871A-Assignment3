@@ -1,0 +1,20 @@
+Date,Event,War Risk,NLP Risk Score,Primary Source
+2026-01-29,U.S.-Iran tensions rise as nuclear negotiations stall,Increased,1.6704,MS NOW
+2026-01-30,Diplomatic efforts intensify to prevent a U.S.-Iran war,Increased,1.2245,Al Jazeera
+2026-02-02,Iran warns of a regional war if the United States carries out threatened strikes,Increased,2.021,WBFF
+2026-02-03,Iran introduces new diplomatic demands while tensions and military provocations continue,Increased,1.2878,Axios
+2026-02-05,U.S.-Iran negotiations remain limited by disagreements over the nuclear issue,Unclear,0.9561,Bulletin of the Atomic Scientists
+2026-02-06,Iran reports a positive atmosphere following negotiations with the United States,Decreased,1.0009,lemonde.fr
+2026-02-09,U.S.-Iran talks reduce tensions but produce limited progress,Decreased,1.1761,The Soufan Center
+2026-02-17,Iran and the United States move forward with talks while tensions remain,Decreased,0.9757,Iran International
+2026-02-26,"Intensive nuclear talks end without an agreement, with additional negotiations planned",Unclear,1.8755,CNBC
+2026-03-02,Concerns increase over the risks and potential consequences of a U.S. war with Iran,Increased,1.0748,Bulletin of the Atomic Scientists
+2026-03-19,Reports examine the regional consequences of a potential strike on an Iranian nuclear facility,Increased,1.0949,CNN
+2026-04-15,Pakistan seeks to reduce tensions and facilitate talks between Iran and the United States,Decreased,1.1574,spectrumlocalnews.com
+2026-05-20,Iran threatens to expand the conflict if U.S. and Israeli attacks resume,Increased,1.1226,CNBC
+2026-06-29,Iran places peace talks at risk while using the Strait of Hormuz as leverage,Increased,1.0799,The New York Times
+2026-07-08,Renewed fighting between Iran and the United States threatens diplomatic negotiations,Increased,1.082,KCRA
+2026-07-09,Renewed U.S.-Iran hostilities deepen Iran's mistrust of negotiations,Increased,1.4556,lemonde.fr
+2026-07-30,Iran adopts a more confrontational geopolitical strategy,Increased,1.4586,Iran International
+2026-08-25,Iran promises retaliation after the United States expands sanctions,Increased,0.9477,NBC News
+2026-09-02,New assessments focus on the continuing Iran conflict,Unclear,1.036,Ipsos
