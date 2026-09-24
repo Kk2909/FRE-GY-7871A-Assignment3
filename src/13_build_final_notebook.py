@@ -9,15 +9,11 @@ OUTPUT_PATH = Path(
 
 
 def markdown(text: str):
-    return nbf.v4.new_markdown_cell(
-        text.strip()
-    )
+    return nbf.v4.new_markdown_cell(text.strip())
 
 
 def code(text: str):
-    return nbf.v4.new_code_cell(
-        text.strip()
-    )
+    return nbf.v4.new_code_cell(text.strip())
 
 
 def main():
@@ -38,46 +34,49 @@ def main():
     notebook["cells"] = [
         markdown(
             r"""
-#### Assignment 3: Iran War Risk and Global Financial Markets
+# Assignment 3: Iran War Risk and Global Financial Markets
 
-This analysis estimates the sensitivity of global financial variables to Iran War Risk during 2026.
+This project estimates the sensitivity of global financial variables to Iran War Risk from **February 28, 2026 through September 18, 2026**.
 
-The methodology combines:
+The analysis combines:
 
-1. NLP analysis of Iran-related news
+1. NLP-based identification of high-war-news dates
 2. Identification through heteroskedasticity
-3. Direct NLP regressions as an alternative empirical approach
-
-The sample covers January 1, 2026 through September 18, 2026.
+3. Direct NLP regressions
+4. A three-regime bad-news, good-news, and low-news extension
+5. Credit excess-return proxies
+6. An evaluation of alternative identification methods
+7. Validation considerations for novel conflict language
 """
         ),
         markdown(
             r"""
-#### Research Question
-
-The main research question is:
+## Research Question
 
 > How sensitive are global financial variables to changes in Iran War Risk during 2026?
 
-Iran War Risk is not directly observable. News stories provide information about military escalation, nuclear tensions, sanctions, diplomatic negotiations and ceasefire developments.
+Iran War Risk is not directly observable. News coverage provides information about military escalation, nuclear developments, sanctions, diplomatic negotiations, ceasefires, and threats to regional energy infrastructure.
 
-The analysis follows the framework in *The Effects of War Risk on U.S. Financial Markets* while using NLP to identify dates with unusually intense Iran-related news.
+The primary analysis replicates the framework in *The Effects of War Risk on U.S. Financial Markets*. NLP identifies dates with unusually intense Iran-related information, and changes in financial-market variances and covariances across high- and low-news regimes are used for identification.
 """
         ),
         markdown(
             r"""
-#### Analysis Structure
+## Analysis Structure
 
-The analysis consists of the following stages:
+The analysis proceeds as follows:
 
-1. Collect Iran-related news from January through September 2026.
-2. Clean headlines and RSS descriptions.
-3. Apply sentence-transformer embeddings to measure relevance, escalation and de-escalation.
-4. Construct a daily Iran War Risk Index.
-5. Identify high- and low-news volatility regimes.
+1. Collect and clean Iran-related news.
+2. Measure relevance, escalation, de-escalation, and intensity using sentence embeddings.
+3. Construct a daily Iran War Risk Index.
+4. Identify high-news dates and matched low-news dates.
+5. Test whether the variance of the reference variable rises in the high-news regime.
 6. Estimate market sensitivities through heteroskedasticity.
-7. Estimate direct NLP regressions as an alternative method.
-8. Compare the results and evaluate methodological limitations.
+7. Normalize the latent factor to a 10-basis-point increase in the five-year Treasury yield.
+8. Estimate direct NLP regressions using all overlapping dates.
+9. Separate bad-war-news, good-war-news, and low-news regimes.
+10. Compare the 2026 Iran setting with the 2003 Iraq setting.
+11. Evaluate alternative identification methods and NLP limitations.
 """
         ),
         code(
@@ -85,11 +84,14 @@ The analysis consists of the following stages:
 from pathlib import Path
 
 import pandas as pd
-from IPython.display import Image, display
+from IPython.display import Image, Markdown, display
 
-pd.set_option("display.max_columns", 30)
+pd.set_option("display.max_columns", 40)
 pd.set_option("display.max_colwidth", 120)
-pd.set_option("display.float_format", lambda value: f"{value:,.4f}")
+pd.set_option(
+    "display.float_format",
+    lambda value: f"{value:,.4f}",
+)
 
 ROOT = Path.cwd()
 
@@ -127,7 +129,7 @@ table_3 = pd.read_csv(
     ROOT / "outputs/tables/table3_variance_explained.csv"
 )
 
-table_4 = pd.read_csv(
+direct_nlp = pd.read_csv(
     ROOT / "outputs/tables/direct_nlp_regressions.csv"
 )
 
@@ -139,12 +141,32 @@ appendix_daily = pd.read_csv(
     ROOT / "outputs/tables/appendix_all_daily_war_risk.csv"
 )
 
+three_regime_summary = pd.read_csv(
+    ROOT / "outputs/tables/three_regime_market_summary.csv"
+)
+
+three_regime_regressions = pd.read_csv(
+    ROOT / "outputs/tables/three_regime_regressions.csv"
+)
+
+validation_sample = pd.read_csv(
+    ROOT / "outputs/tables/nlp_validation_sample.csv"
+)
+
+ai_evaluation_path = (
+    ROOT / "outputs/tables/ai_methodology_evaluation.md"
+)
+
 print("All final datasets and tables loaded successfully.")
 """
         ),
         markdown(
             r"""
-#### Data Coverage
+## Data Coverage
+
+The raw article collection begins before the final estimation period so the original corpus is preserved. The daily risk index, thresholds, matching procedure, and final market analysis are restricted to February 28, 2026 onward.
+
+Because February 28, 2026 was a Saturday, the first applicable financial-market date is March 2, 2026.
 """
         ),
         code(
@@ -152,28 +174,27 @@ print("All final datasets and tables loaded successfully.")
 coverage = pd.DataFrame(
     {
         "Dataset": [
-            "Clean news articles",
-            "Daily news dates",
-            "Common market dates",
-            "High-news regime",
-            "Matched low-news regime",
-            "Financial variables",
+            "Scored news articles in raw corpus",
+            "Daily risk-index dates in final period",
+            "Market dates in final period",
+            "Matched high-news observations",
+            "Matched low-news observations",
+            "Variables in variance diagnostics",
+            "Three-regime market dates",
+            "NLP validation sample",
         ],
         "Observations": [
             len(news),
             len(daily_risk),
             len(market_changes),
-            (
-                estimation_sample["regime"]
-                .eq("high")
-                .sum()
-            ),
-            (
-                estimation_sample["regime"]
-                .eq("low")
-                .sum()
-            ),
+            estimation_sample["regime"].eq("high").sum(),
+            estimation_sample["regime"].eq("low").sum(),
             len(variance_diagnostics),
+            three_regime_summary[
+                three_regime_summary["variable"]
+                == "r_vix"
+            ]["observations"].sum(),
+            len(validation_sample),
         ],
     }
 )
@@ -183,61 +204,58 @@ coverage
         ),
         markdown(
             r"""
-The news dataset contains 8,472 unique articles from January 1 through September 18, 2026. The daily dataset contains 188 news dates, while 181 dates overlap with available financial-market observations.
+The final daily risk dataset contains **146 dates**. The merged market and news dataset contains **142 dates**. The heteroskedasticity sample contains **15 high-news dates and 15 matched low-news dates**.
 
-The heteroskedasticity estimation uses 19 high-news days and 19 matched low-news days. The direct NLP regressions use nearly the complete set of overlapping market dates.
+Several market-return series have 138 usable observations because of non-trading days and missing price changes, while the VIX has 142 usable observations.
 """
         ),
         markdown(
             r"""
-#### News Collection
+## News Collection
 
-News was collected using Google News RSS searches across three categories:
+Iran-related news was collected across three broad categories:
 
 - Military conflict
 - Nuclear developments
 - Diplomatic negotiations
 
-Searches were conducted in weekly windows to obtain historical coverage across the complete sample.
+The corpus contains articles from a broad range of major news outlets. Google News RSS may cap the number of results returned for an individual search. Article counts should therefore be interpreted as the volume observed in the collected sample rather than a complete census of all published news.
 
-Google News limits each RSS result set. Therefore, the article corpus should be interpreted as a broad and diverse sample of news coverage rather than a complete count of every published article.
-
-The corpus includes Reuters, Al Jazeera, PBS, The New York Times, Iran International, CNBC, BBC, CBS News, The Guardian and AP News, among other sources.
+The primary daily index gives more weight to semantic event intensity than to raw article counts, reducing—but not eliminating—the effect of capped search results.
 """
         ),
         markdown(
             r"""
-#### NLP Methodology
+## NLP Methodology
 
 The sentence-transformer model `all-MiniLM-L6-v2` converts each headline and RSS description into a semantic embedding.
 
-Each article is compared with groups of seed statements representing:
+Each article is compared with seed statements representing:
 
-- Iran war relevance
+- Iran-war relevance
 - Military escalation
 - Diplomatic de-escalation
 
-For article $$i$$:
+For article \(i\):
 
-$$
+\[
 EventStrength_i
 =
-\max
-\left(
+\max(
 Escalation_i,
 Deescalation_i
-\right)
-$$
+)
+\]
 
-$$
+\[
 WarNewsIntensity_i
 =
 Relevance_i
 \times
 EventStrength_i
-$$
+\]
 
-The maximum of escalation and de-escalation similarity is used because both types of news can produce large revisions in perceived war risk.
+The maximum of escalation and de-escalation similarity is used because both major escalation and major de-escalation news can produce substantial revisions in perceived war risk.
 """
         ),
         code(
@@ -267,31 +285,21 @@ signal_counts
         ),
         markdown(
             r"""
-#### Daily Iran War Risk Index
+## Daily Iran War Risk Index
 
-Articles released after 4:00 p.m. Eastern Time are assigned to the following business day. Weekend news is also assigned to the next business day.
+Articles published after 4:00 p.m. Eastern Time are assigned to the following business day. Weekend news is assigned to the next business day.
 
 The daily index is:
 
-$$
+\[
 RiskIndex_t
 =
-0.80
-\times
-Z
-\left(
-Top10Intensity_t
-\right)
+0.80 Z(Top10Intensity_t)
 +
-0.20
-\times
-Z
-\left(
-UncertaintyRate_t
-\right)
-$$
+0.20 Z(UncertaintyRate_t)
+\]
 
-The top 10 percent of dates are classified as high-news days. These dates represent periods when the amount and intensity of Iran-related information were unusually high.
+Using the mean intensity of the ten strongest articles reduces dependence on total article counts. The top 10% of daily index values are classified as high-news dates. Dates below the median are eligible to serve as matched low-news observations.
 """
         ),
         code(
@@ -308,19 +316,19 @@ display(
         ),
         markdown(
             r"""
-#### Table 1: High- and Low-News Heteroskedasticity Regimes
+## Table 1: High- and Low-News Regimes
 
-Table 1 contains all 38 dates used in the heteroskedasticity estimation:
+Table 1 contains the 30 dates used in the heteroskedasticity analysis:
 
-- 19 high-variance Iran news dates
-- 19 matched low-variance dates
+- 15 high-news dates
+- 15 uniquely matched low-news dates
 
-The low-news observations are selected to be close to the corresponding high-news observations. The median matching distance is two trading days and the maximum distance is nine trading days.
+The matching criterion minimizes distance in trading days, with lower risk-index values used as a tie-breaker. The median matching distance is one trading day and the maximum is four trading days.
 """
         ),
         code(
             """
-table_1_display = table_1[
+table_1[
     [
         "Date",
         "Regime",
@@ -330,18 +338,7 @@ table_1_display = table_1[
         "Primary Event",
         "Primary Source",
     ]
-].copy()
-
-table_1_display
-"""
-        ),
-        markdown(
-            r"""
-The complete 188-date daily chronology is retained in:
-
-`outputs/tables/appendix_all_daily_war_risk.csv`
-
-This appendix contains the daily article count, primary event, source, NLP score, uncertainty rate and regime classification.
+]
 """
         ),
         code(
@@ -360,21 +357,15 @@ appendix_summary = pd.DataFrame(
             len(appendix_daily),
             appendix_daily["Date"].min(),
             appendix_daily["Date"].max(),
-            (
-                appendix_daily["Regime"]
-                .eq("High variance")
-                .sum()
-            ),
-            (
-                appendix_daily["Regime"]
-                .eq("Matched low variance")
-                .sum()
-            ),
-            (
-                appendix_daily["Regime"]
-                .eq("Other")
-                .sum()
-            ),
+            appendix_daily["Regime"]
+            .eq("High variance")
+            .sum(),
+            appendix_daily["Regime"]
+            .eq("Matched low variance")
+            .sum(),
+            appendix_daily["Regime"]
+            .eq("Other")
+            .sum(),
         ],
     }
 )
@@ -384,135 +375,93 @@ appendix_summary
         ),
         markdown(
             r"""
-#### Financial Variables
+## Financial Variables
 
-The analysis uses:
+The analysis includes:
 
-- 5-year U.S. Treasury yield
-- 10-year U.S. Treasury yield
+- Five-year and ten-year U.S. Treasury yields
 - S&P 500
-- Global equity ETF
-- Investment-grade corporate bond ETF
-- High-yield corporate bond ETF
-- Inflation-linked Treasury ETF
-- Brent crude oil futures
-- Gold futures
+- Global equities
+- Investment-grade corporate bonds
+- High-yield corporate bonds
+- Inflation-linked Treasury bonds
+- Brent crude oil
+- Gold
 - U.S. Dollar Index
 - VIX
+- Investment-grade credit excess-return proxy
+- High-yield credit excess-return proxy
 
-The original paper uses the 2-year Treasury yield as the reference variable. A reliable 2-year series was unavailable through the selected data source, so the 5-year Treasury yield is used as the reference variable.
+Yield changes are measured in percentage points. Prices and indices are measured using percentage log returns.
 
-Yield changes are measured in percentage points. Prices and market indices are measured using percentage log returns.
+The credit variables are not actual option-adjusted spreads. They are calculated as corporate-bond ETF returns minus inflation-linked Treasury ETF returns:
+
+\[
+IGProxy_t = r_{LQD,t} - r_{TIP,t}
+\]
+
+\[
+HYProxy_t = r_{HYG,t} - r_{TIP,t}
+\]
+
+A negative proxy value indicates corporate credit underperformance relative to Treasury inflation-protected bonds and is directionally consistent with weaker credit conditions or wider spreads.
 """
         ),
         markdown(
             r"""
-#### Identification Through Heteroskedasticity
-
-Let daily changes in financial variables be:
-
-$$
-\Delta X_t
-=
-D z_t + \mu_t
-$$
-
-where:
-
-- $$z_t$$ is the unobservable Iran War Risk factor
-- $$D$$ contains the sensitivity of financial variables to that factor
-- $$\mu_t$$ contains other financial shocks
+## Identification Through Heteroskedasticity
 
 Let:
 
-$$
-\Omega_H
-=
-Var
-\left(
-\Delta X_t
-\mid H
-\right)
-$$
+\[
+\Delta X_t = D z_t + \mu_t
+\]
 
-and:
+where \(z_t\) is the unobservable Iran War Risk factor, \(D\) contains financial-market sensitivities, and \(\mu_t\) represents other financial shocks.
 
-$$
-\Omega_L
-=
-Var
-\left(
-\Delta X_t
-\mid L
-\right)
-$$
+Define:
+
+\[
+\Omega_H = Var(\Delta X_t \mid H)
+\]
+
+\[
+\Omega_L = Var(\Delta X_t \mid L)
+\]
 
 The covariance difference is:
 
-$$
-\Delta \Omega
-=
-\Omega_H-\Omega_L
-$$
+\[
+\Delta\Omega = \Omega_H - \Omega_L
+\]
 
-If the principal difference between the two regimes is the variance of Iran War Risk, the change in market covariance identifies the relative market sensitivities.
+If the main difference between regimes is a change in the variance of Iran War Risk, the change in covariance identifies the relative factor loadings.
 
-Using the 5-year Treasury yield as the reference variable:
+Using the five-year Treasury yield as the reference variable:
 
-$$
-\hat{d}_j
-=
+\[
+\widehat d_j =
 \frac{
-Cov_H
-\left(
-\Delta x_1,\Delta x_j
-\right)
+Cov_H(\Delta x_1,\Delta x_j)
 -
-Cov_L
-\left(
-\Delta x_1,\Delta x_j
-\right)
+Cov_L(\Delta x_1,\Delta x_j)
 }{
-Var_H
-\left(
-\Delta x_1
-\right)
+Var_H(\Delta x_1)
 -
-Var_L
-\left(
-\Delta x_1
-\right)
+Var_L(\Delta x_1)
 }
-$$
+\]
 
-The estimated effects are normalized to a war-risk shock associated with a 10-basis-point decline in the 5-year Treasury yield.
+Heteroskedasticity identifies the factor only up to scale and sign. The factor is therefore normalized to a **10-basis-point increase in the five-year Treasury yield**, consistent with the Iran-specific inflation, energy-price, debt-risk, and weaker-flight-to-quality channels described in the assignment guidance.
+
+Directional NLP regressions are used as an additional interpretation check rather than treating the sign normalization as independently identified.
 """
         ),
         markdown(
             r"""
-#### Variance-Regime Validation
+## Variance-Regime Validation
 
-The identification strategy requires the reference-variable variance to be higher during the high-news regime.
-
-The 5-year Treasury yield variance ratio is approximately:
-
-$$
-\frac{
-Var_H
-\left(
-\Delta y^{5Y}
-\right)
-}{
-Var_L
-\left(
-\Delta y^{5Y}
-\right)
-}
-=
-1.69
-$$
-
-Nine of the eleven financial variables have higher variance on high-news days. Brent oil and gold have the largest variance increases.
+The reference-variable variance must be higher in the high-news regime for the identification strategy to be informative.
 """
         ),
         code(
@@ -520,6 +469,8 @@ Nine of the eleven financial variables have higher variance on high-news days. B
 variance_display = variance_diagnostics[
     [
         "variable",
+        "high_observations",
+        "low_observations",
         "variance_low",
         "variance_high",
         "variance_difference",
@@ -529,6 +480,13 @@ variance_display = variance_diagnostics[
 ].copy()
 
 variance_display.round(4)
+"""
+        ),
+        markdown(
+            r"""
+The five-year Treasury yield variance ratio is approximately **2.35**, satisfying the required variance-direction condition. Seven of the thirteen variables have higher variance on high-news dates.
+
+The individual Levene tests are not statistically significant, which is unsurprising with only 15 matched observations per regime. The analysis should therefore be interpreted cautiously because the sample provides limited power for detecting variance differences.
 """
         ),
         code(
@@ -545,11 +503,9 @@ display(
         ),
         markdown(
             r"""
-#### Table 2: Estimated Impact of an Increase in Iran War Risk
+## Table 2: Estimated Impact of an Increase in Iran War Risk
 
-Table 2 replicates the main structure of the original war-risk paper.
-
-The three estimators use alternative instruments derived from the covariance changes across the high- and low-news regimes. Bootstrap confidence intervals are reported for the combined estimator.
+The estimated effects are normalized to a 10-basis-point increase in the five-year Treasury yield. Bootstrap confidence intervals are reported for the combined estimator.
 """
         ),
         code(
@@ -559,20 +515,21 @@ table_2
         ),
         markdown(
             r"""
-#### Interpretation of Table 2
+## Interpretation of Table 2
 
-The most statistically reliable results are:
+The central heteroskedasticity results are:
 
-- The 10-year Treasury yield declines by approximately 6.94 basis points.
-- Inflation-linked bonds increase by approximately 0.33 percent.
+- The ten-year Treasury yield increases by approximately **9.05 basis points**, with a 95% confidence interval of approximately 3.63 to 12.08 basis points.
+- The S&P 500 response is approximately **-0.47%**, but is not statistically significant.
+- Global equities decline by approximately **-0.75%**, but the estimate is imprecise.
+- Investment-grade and high-yield bond returns are negative but insignificant.
+- Inflation-linked bonds decline by approximately **-0.32%**, with a confidence interval below zero.
+- Brent oil increases by approximately **5.32%**, but the confidence interval includes zero.
+- VIX increases by approximately **6.37%**, but with a wide confidence interval.
+- The investment-grade credit excess-return proxy is negative, which is directionally consistent with weaker credit conditions, but it is not statistically significant.
+- The high-yield credit proxy is close to zero and statistically insignificant.
 
-The estimated S&P 500 response is -1.44 percent, while global equities decline by approximately 1.35 percent. Both estimates have confidence intervals containing zero.
-
-The VIX increases by approximately 13.56 percent, but the confidence interval is wide.
-
-The directional estimates for Brent oil and gold are unstable. Their confidence intervals are wide and include zero.
-
-Estimator 2 produces extreme values for investment-grade bonds and gold. This occurs because the change in covariance used in its denominator is close to zero. The disagreement between estimators provides evidence of weak identification for these variables.
+These estimates provide economically meaningful signs for several variables, but the small matched sample creates substantial uncertainty.
 """
         ),
         code(
@@ -589,41 +546,32 @@ display(
         ),
         markdown(
             r"""
-#### Table 3: Variance Explained by Iran War Risk
+## Table 3: Variance Explained by Iran War Risk
 
-The war-induced increase in variance for variable $$j$$ is:
+For financial variable \(j\):
 
-$$
+\[
 \widehat{\Delta Var_j}
 =
-\hat{d}_j^2
+\widehat d_j^2
 \left[
-Var_H
-\left(
-\Delta x_1
-\right)
+Var_H(\Delta x_1)
 -
-Var_L
-\left(
-\Delta x_1
-\right)
+Var_L(\Delta x_1)
 \right]
-$$
+\]
 
-The estimated share of high-news-day variance explained is:
+The share of high-news-day variance explained is:
 
-$$
+\[
 Share_{j,H}
 =
 \frac{
 \widehat{\Delta Var_j}
 }{
-Var_H
-\left(
-\Delta x_j
-\right)
+Var_H(\Delta x_j)
 }
-$$
+\]
 """
         ),
         code(
@@ -633,20 +581,7 @@ table_3
         ),
         markdown(
             r"""
-#### Interpretation of Table 3
-
-Iran War Risk accounts for an estimated:
-
-- 27.53 percent of high-news-day variance in the 10-year Treasury yield
-- 31.69 percent in the S&P 500
-- 22.88 percent in global equities
-- 77.83 percent in Brent oil
-- 26.18 percent in gold
-- 27.62 percent in the VIX
-
-The full-sample percentages are smaller because only 19 of the available market dates are classified as high-news days.
-
-A large variance contribution does not guarantee a reliable directional coefficient. Brent oil is the clearest example. Its high-news-day variance contribution is large, while its estimated directional confidence interval remains wide.
+The estimated variance contributions are largest for the ten-year Treasury yield, inflation-linked bonds, and Brent oil. A large estimated variance contribution does not imply that the directional coefficient is precisely estimated. Brent oil, for example, has a large variance contribution but a wide directional confidence interval.
 """
         ),
         code(
@@ -663,15 +598,11 @@ display(
         ),
         markdown(
             r"""
-#### Alternative Empirical Method: Direct NLP Regression
+## Alternative Method: Direct NLP Regressions
 
-Identification through heteroskedasticity is not the only method available for estimating war-risk effects.
+The direct directional regression is:
 
-A direct NLP approach treats the news-based escalation and intensity scores as observed explanatory variables.
-
-The directional model is:
-
-$$
+\[
 \Delta x_{j,t}
 =
 \alpha_j
@@ -679,75 +610,45 @@ $$
 \beta_j SignedRisk_t
 +
 \varepsilon_{j,t}
-$$
+\]
 
-The volatility model is:
+The intensity regression is:
 
-$$
-\left|
-\Delta x_{j,t}
-\right|
+\[
+|\Delta x_{j,t}|
 =
 \alpha_j
 +
 \gamma_j RiskIntensity_t
 +
 \varepsilon_{j,t}
-$$
+\]
 
-Both NLP variables are standardized. Therefore, each coefficient represents the response to a one-standard-deviation increase in the relevant NLP score.
-
-Heteroskedasticity-consistent HC3 standard errors are used.
+The NLP variables are standardized, and HC3 heteroskedasticity-consistent standard errors are used.
 """
         ),
         markdown(
             r"""
-#### Table 4A: Direct NLP Directional Regression
+### Directional NLP Results
 """
         ),
         code(
             """
-direction_table = table_4[
-    [
-        "label",
-        "observations",
-        "direction_coefficient",
-        "direction_standard_error",
-        "direction_p_value",
-        "direction_r_squared",
-        "direction_significant",
-    ]
+direction_columns = [
+    "label",
+    "direction_coefficient",
+    "direction_standard_error",
+    "direction_p_value",
+    "direction_r_squared",
+    "direction_significant",
+]
+
+if "observations" in direct_nlp.columns:
+    direction_columns.insert(1, "observations")
+
+direction_table = direct_nlp[
+    direction_columns
 ].copy()
-
-yield_rows = direction_table["label"].isin(
-    [
-        "5-Year Treasury Yield",
-        "10-Year Treasury Yield",
-    ]
-)
-
-direction_table["Unit"] = "Percent return"
-direction_table.loc[yield_rows, "Unit"] = "Basis points"
-
-direction_table.loc[
-    yield_rows,
-    [
-        "direction_coefficient",
-        "direction_standard_error",
-    ],
-] *= 100
-
-direction_table = direction_table.rename(
-    columns={
-        "label": "Financial Variable",
-        "observations": "Observations",
-        "direction_coefficient": "Coefficient",
-        "direction_standard_error": "HC3 Standard Error",
-        "direction_p_value": "P-Value",
-        "direction_r_squared": "R-Squared",
-        "direction_significant": "Significant at 5%",
-    }
-)
 
 direction_table.round(4)
 """
@@ -756,186 +657,306 @@ direction_table.round(4)
             r"""
 A one-standard-deviation increase in escalation language is associated with:
 
-- A 0.63-basis-point increase in the 5-year Treasury yield
-- A 0.71-basis-point increase in the 10-year Treasury yield
-- A 0.54 percent increase in Brent oil
+- A positive but insignificant change in the five-year Treasury yield.
+- A statistically significant increase in the ten-year Treasury yield.
+- A statistically significant increase in Brent oil.
+- Negative S&P 500 and global-equity coefficients, although neither is statistically significant.
+- A negative investment-grade credit-proxy coefficient, although it is statistically insignificant.
 
-These three coefficients are statistically significant at the 5 percent level.
-
-The equity coefficients are negative, but they are economically small and statistically insignificant.
+These results support the assignment's expectation that Iran escalation may increase longer-term yields and oil prices while placing downward pressure on risk assets.
 """
         ),
         markdown(
             r"""
-#### Table 4B: Direct NLP Intensity and Absolute Market Movement
+### NLP Intensity and Absolute Market Movement
 """
         ),
         code(
             """
-intensity_table = table_4[
-    [
-        "label",
-        "observations",
-        "intensity_coefficient",
-        "intensity_standard_error",
-        "intensity_p_value",
-        "intensity_r_squared",
-        "intensity_significant",
-    ]
+intensity_columns = [
+    "label",
+    "intensity_coefficient",
+    "intensity_standard_error",
+    "intensity_p_value",
+    "intensity_r_squared",
+    "intensity_significant",
+]
+
+if "observations" in direct_nlp.columns:
+    intensity_columns.insert(1, "observations")
+
+intensity_table = direct_nlp[
+    intensity_columns
 ].copy()
-
-yield_rows = intensity_table["label"].isin(
-    [
-        "5-Year Treasury Yield",
-        "10-Year Treasury Yield",
-    ]
-)
-
-intensity_table["Unit"] = "Absolute percent movement"
-intensity_table.loc[
-    yield_rows,
-    "Unit",
-] = "Absolute basis-point movement"
-
-intensity_table.loc[
-    yield_rows,
-    [
-        "intensity_coefficient",
-        "intensity_standard_error",
-    ],
-] *= 100
-
-intensity_table = intensity_table.rename(
-    columns={
-        "label": "Financial Variable",
-        "observations": "Observations",
-        "intensity_coefficient": "Coefficient",
-        "intensity_standard_error": "HC3 Standard Error",
-        "intensity_p_value": "P-Value",
-        "intensity_r_squared": "R-Squared",
-        "intensity_significant": "Significant at 5%",
-    }
-)
 
 intensity_table.round(4)
 """
         ),
         markdown(
             r"""
-A one-standard-deviation increase in overall Iran news intensity is associated with a 0.29 percent increase in the absolute daily movement of gold. This result is statistically significant.
+Higher news intensity is significantly associated with a larger absolute Brent oil movement. The gold intensity coefficient is positive and marginally significant at approximately the 10% level, but not at the 5% level.
 
-Brent oil also shows a positive absolute-movement coefficient of approximately 0.29 percent, with a p-value of 0.076. This provides suggestive, but not 5-percent-significant, evidence that more intense Iran news increases oil-price volatility.
+The low \(R^2\) values indicate that Iran-news measures explain only a small share of daily market variation. This is expected because daily prices also respond to monetary policy, macroeconomic releases, earnings, and other geopolitical events.
 """
         ),
         markdown(
             r"""
-#### Comparison of the Two Empirical Methods
+## Three-Regime Extension
 
-The two approaches answer related but different questions.
+The direction-neutral high/low split remains the primary heteroskedasticity design. A separate extension classifies dates into:
 
-| Method | Main Question | Primary Advantage | Primary Limitation |
+1. Bad war news
+2. Good war news
+3. No or low war news
+
+A date must be above the 75th percentile of the daily risk index to enter a directional high-news regime. Among those dates, a nonnegative weighted direction is classified as bad war news and a negative direction as good war news.
+"""
+        ),
+        code(
+            """
+regime_counts = (
+    three_regime_summary[
+        three_regime_summary["variable"] == "r_vix"
+    ][["regime", "observations"]]
+    .reset_index(drop=True)
+)
+
+regime_counts
+"""
+        ),
+        code(
+            """
+selected_variables = [
+    "d_five_year_yield",
+    "d_ten_year_yield",
+    "r_sp500",
+    "r_global_equity",
+    "r_brent_oil",
+    "r_gold",
+    "r_vix",
+    "r_ig_credit_proxy",
+    "r_hy_credit_proxy",
+]
+
+three_regime_summary[
+    three_regime_summary["variable"].isin(
+        selected_variables
+    )
+][
+    [
+        "label",
+        "regime",
+        "observations",
+        "mean",
+        "median",
+        "variance",
+        "standard_deviation",
+    ]
+].round(4)
+"""
+        ),
+        code(
+            """
+three_regime_regressions[
+    three_regime_regressions["variable"].isin(
+        selected_variables
+    )
+][
+    [
+        "label",
+        "term",
+        "coefficient",
+        "standard_error",
+        "p_value",
+        "confidence_low",
+        "confidence_high",
+        "r_squared",
+        "observations",
+    ]
+].round(4)
+"""
+        ),
+        markdown(
+            r"""
+The three-regime sample contains approximately 30 bad-news dates, 6 good-news dates, and 106 no- or low-news dates. The directional groups are therefore highly unbalanced.
+
+Most three-regime coefficients are statistically insignificant. The significant good-news coefficient for gold is based on only five usable return observations and should not be generalized.
+
+The extension is useful for illustrating direction, but it is not stronger than the primary high/low heteroskedasticity design because the good-news group is very small.
+"""
+        ),
+        markdown(
+            r"""
+## Iran 2026 Versus Iraq 2003
+
+| Variable | Iraq War 2003 benchmark | Iran 2026 expectation | Iran 2026 evidence |
 |---|---|---|---|
-| Identification through heteroskedasticity | How do markets load on an unobservable factor whose variance increases on war-news days? | Does not require an exact observed measure of war risk | Requires stable covariance structure and valid regime classification |
-| Direct NLP directional regression | How do markets respond to explicitly classified escalation language? | Clear directional interpretation and uses nearly all dates | Treats the NLP score as an accurately measured explanatory variable |
-| Direct NLP intensity regression | Does more intense war news increase absolute market movements? | Direct test of the news-volatility relationship | Does not separately identify war news from correlated events |
+| Treasury yields | Yields fell as investors sought safety | Yields may rise because of inflation, debt concerns, and weaker flight-to-quality demand | Ten-year yield rises significantly in both the normalized heteroskedasticity model and direct NLP regression |
+| Oil | Oil increased with perceived supply risk | Oil should increase, although greater U.S. production may reduce the domestic macroeconomic effect | Brent rises in both main approaches; direct NLP coefficient is significant |
+| Credit spreads | Spreads widened | Credit conditions should weaken | IG credit proxy is negative but insignificant; HY proxy is inconclusive |
+| Equities | Equities fell | Equities should fall | S&P 500 and global-equity estimates are negative in the primary and direct NLP specifications but insignificant |
+| Gold | Limited movement in the benchmark | A safe-haven or inflation response is possible | Directional estimates are unstable; intensity is associated with larger gold movements at approximately the 10% level |
+| VIX | Risk and uncertainty increased | VIX should increase | Heteroskedasticity estimate is positive but imprecise |
 
-The methods produce different Treasury interpretations.
+U.S. crude-oil production is substantially higher in 2026 than it was around the Iraq War period—approximately 14 million barrels per day compared with roughly 6 million barrels per day. Greater domestic production may reduce direct U.S. vulnerability to imported supply disruptions.
 
-The heteroskedasticity model normalizes the latent war-risk shock to a decline in the 5-year Treasury yield. The direct NLP regression instead finds that explicitly classified escalation language is associated with a small increase in 5-year and 10-year yields.
-
-This difference may arise because:
-
-- The latent factor contains dimensions not fully captured by escalation language.
-- Iran news may affect expected inflation and energy prices as well as safe-haven demand.
-- Headlines can contain both escalation and diplomatic language.
-- Other macroeconomic information may occur on the same dates.
-- Some heteroskedasticity estimators are weak for particular asset classes.
-
-The direct NLP method produces a clearer oil result. Escalation language is associated with a statistically significant increase in Brent oil prices. The intensity regression also finds a significant increase in gold volatility.
-
-Neither method is uniformly superior. Identification through heteroskedasticity is more appropriate when war risk is treated as an unobservable latent factor. Direct NLP regression is more transparent when the objective is to measure the response to observed escalation language.
+However, Iran-related conflict can still affect global energy prices through the Strait of Hormuz, regional production, shipping insurance, and the possibility of broader military escalation.
 """
         ),
         markdown(
             r"""
-#### Other Possible Measures of War Risk
+## Novel Language and NLP Validation
 
-Additional approaches include:
+Fixed legacy dictionaries may fail to recognize new conflict terminology, indirect references, newly named operations, or evolving diplomatic language.
 
-1. **Traditional event studies:** Measure returns within narrow windows around attacks, threats, ceasefires or negotiation announcements.
-2. **Geopolitical Risk Index:** Use an established news-based geopolitical-risk measure, although a general index may not isolate Iran.
-3. **Prediction-market probabilities:** Use market-implied probabilities of conflict when liquid and clearly defined contracts are available.
-4. **Options-implied measures:** Use oil, equity or currency implied volatility and skew as forward-looking measures of tail risk.
-5. **Structural VARs:** Estimate dynamic responses using structural restrictions.
-6. **Local projections:** Estimate how financial variables respond over multiple horizons.
-7. **Principal component analysis:** Extract a common latent factor from a large group of financial variables.
+Sentence embeddings improve on exact keyword matching because semantically similar phrases can receive similar scores even when they do not contain the same words. Nevertheless, embeddings do not eliminate errors arising from:
 
-These alternatives require different data and identifying assumptions. The combined NLP and heteroskedasticity framework remains appropriate because NLP identifies the information regimes while the econometric model permits the underlying war-risk factor to remain unobserved.
+- Mixed escalation and de-escalation headlines
+- Sarcasm or rhetorical language
+- Indirect references
+- Headlines requiring broader context
+- Newly introduced military or diplomatic terminology
+- Descriptions that discuss conflict historically rather than as a new event
+
+A stratified 50-article validation sample was created from:
+
+- 20 highest-intensity articles
+- 15 articles near the intensity threshold
+- 15 randomly selected articles
+
+The manual-label columns are intentionally left separate from the model output. No manual accuracy statistic is reported until those labels are completed.
+"""
+        ),
+        code(
+            """
+validation_sample[
+    [
+        "sample_type",
+        "published_utc",
+        "title_clean",
+        "source",
+        "predicted_signal",
+        "war_news_intensity",
+        "war_risk_direction",
+        "manual_label",
+        "classification_correct",
+        "novel_phrasing",
+        "notes",
+    ]
+].head(15)
 """
         ),
         markdown(
             r"""
-#### Assumptions
+## Evaluation of Alternative Identification Methods
+
+Identification through heteroskedasticity is appropriate as the **primary replication method**, but it is not independently conclusive.
+
+| Method | Main advantage | Main weakness | Role in this project |
+|---|---|---|---|
+| Identification through heteroskedasticity | Addresses simultaneity without requiring perfect observation of the latent shock | Strong regime-stability assumptions, small-sample instability, and sign normalization | Primary replication |
+| Direct NLP regression | Uses nearly all dates and provides directional interpretation | Omitted-variable bias and NLP measurement error | Main robustness test |
+| Three-regime analysis | Separates bad and good war news | Very small good-news group | Exploratory extension |
+| Traditional event study | Clear interpretation around precisely timed events | Contamination and timing requirements | Useful for selected major events |
+| Local projections | Estimates dynamic responses over several horizons | Requires more observations | Future extension |
+| Structural VAR | Models joint market dynamics and feedback | Strong ordering restrictions and overparameterization | Less suitable for the short sample |
+| External-instrument IV | Potentially strong causal interpretation | A credible instrument and exclusion restriction are difficult to establish | Theoretically attractive but impractical here |
+| Narrative identification | Uses expert-reviewed surprise events | Subjective and produces few observations | Useful for validation |
+
+The preferred strategy is therefore:
+
+1. Use heteroskedasticity identification as the primary replication.
+2. Use direct NLP regressions as the main robustness analysis.
+3. Use the three-regime analysis as a directional extension.
+4. Use manual headline review to assess NLP classification quality.
+5. Consider a narrow event-study appendix for a few precisely timed events.
+
+Conclusions are strongest when the different approaches produce economically consistent patterns.
+"""
+        ),
+        code(
+            """
+if ai_evaluation_path.exists():
+    evaluation_text = ai_evaluation_path.read_text(
+        encoding="utf-8"
+    )
+    display(Markdown(evaluation_text))
+else:
+    print(
+        "Separate methodology evaluation file "
+        "was not found."
+    )
+"""
+        ),
+        markdown(
+            r"""
+## Assumptions
 
 The heteroskedasticity interpretation depends on the following assumptions:
 
-1. Iran War Risk is the primary factor whose variance changes between the selected regimes.
-2. Financial-market sensitivities remain stable during the sample.
-3. Iran War Risk is approximately orthogonal to other structural shocks.
-4. The variance of unrelated shocks remains approximately stable across regimes.
-5. High-news dates are not systematically contaminated by monetary-policy or macroeconomic announcements.
-6. The relationship between the latent factor and financial variables is approximately linear.
+1. Iran War Risk is the principal factor whose variance changes between the selected regimes.
+2. Financial-market factor loadings remain stable across regimes.
+3. Iran War Risk is sufficiently independent of other structural shocks.
+4. The variances of unrelated shocks do not change systematically across regimes.
+5. High-news dates are not systematically contaminated by monetary-policy, inflation, employment, or unrelated geopolitical announcements.
+6. The factor structure is approximately linear.
+7. The NLP index correctly separates relatively high- and low-information dates.
 
-The direct NLP regressions require the signed NLP score to be a meaningful measure of escalation and approximately exogenous to same-day financial shocks.
+The direct NLP regressions additionally require the signed NLP score to contain meaningful directional information and not merely reflect market reactions already incorporated into news coverage.
 """
         ),
         markdown(
             r"""
-#### Limitations
+## Limitations
 
 The main limitations are:
 
-- Google News RSS limits the number of articles returned for each query.
-- NLP is applied to headlines and short RSS descriptions rather than complete articles.
-- Mixed headlines can contain both escalation and negotiation language.
-- The high-news regime contains only 19 dates.
-- The 5-year Treasury yield is used instead of the original paper's 2-year yield.
-- Corporate bond and inflation-linked bond ETFs are used as market-traded proxies.
-- Major monetary-policy or macroeconomic announcements may overlap with Iran news.
-- The heteroskedasticity estimators diverge substantially for some assets.
-- Direct NLP regressions have low $$R^2$$ values.
-- Statistical significance is limited for several financial variables.
-- The results depend on the selected NLP prompts, thresholds and matching procedure.
+- The final period covers only February 28 through September 18, 2026.
+- The heteroskedasticity design uses only 15 matched pairs.
+- Some high-news return series contain only 13 usable observations.
+- Google News RSS may cap results.
+- NLP is applied to headlines and short descriptions rather than full articles.
+- Novel or mixed language may be misclassified.
+- The good-news regime contains only six dates.
+- The five-year Treasury yield replaces the two-year yield used in the original paper.
+- The sign of the latent factor is imposed through normalization.
+- LQD and HYG returns are not actual credit spreads.
+- The credit excess-return measures are only proxies.
+- Macroeconomic and monetary-policy events may overlap with Iran news.
+- Individual variance-difference tests have limited power.
+- Several confidence intervals are wide.
+- Direct NLP regressions have low explanatory power.
+- Results depend on the NLP seeds, thresholds, and matching procedure.
 
-The estimates should therefore be interpreted as conditional factor sensitivities rather than unrestricted causal effects.
+The estimates should be interpreted as conditional market sensitivities under the model assumptions, not as unconditional proof that Iran War Risk caused every observed market movement.
 """
         ),
         markdown(
             r"""
-#### Conclusion
+## Conclusion
 
-NLP analysis identifies a set of 2026 dates with unusually intense Iran-related conflict, nuclear and diplomatic news. Market variance is higher on these dates for nine of the eleven financial variables examined.
+The updated analysis identifies 15 high-news dates and 15 matched low-news dates between February 28 and September 18, 2026. The five-year Treasury yield variance is approximately 2.35 times higher in the high-news regime, supporting the variance-direction condition required for heteroskedasticity-based identification.
 
-Identification through heteroskedasticity finds the strongest evidence in the Treasury market. A latent war-risk shock associated with a 10-basis-point decline in the 5-year Treasury yield produces an estimated 6.94-basis-point decline in the 10-year yield.
+Under normalization to a 10-basis-point increase in the five-year Treasury yield, the ten-year yield increases significantly by approximately 9.05 basis points. Equity responses are negative, Brent oil and VIX responses are positive, and investment-grade credit conditions weaken, although these estimates are generally imprecise.
 
-The heteroskedasticity estimates also suggest equity declines and a VIX increase, but these responses are not statistically significant. Oil and gold display substantial excess variance, although their directional heteroskedasticity estimates are unstable.
+The direct NLP regressions provide important complementary evidence. Escalation language is associated with a significant increase in the ten-year Treasury yield and Brent oil. Equity coefficients are negative but insignificant. Higher news intensity is associated with significantly larger absolute Brent movements.
 
-The direct NLP regressions provide a different but complementary result. Explicit escalation language is associated with small increases in Treasury yields and a statistically significant increase in Brent oil. Higher overall news intensity is associated with significantly larger absolute gold-price movements.
+The three-regime analysis provides directional context but is limited by only six good-news dates. Credit excess-return proxies are directionally informative but statistically insignificant.
 
-The combined evidence indicates that Iran War Risk is relevant to Treasury yields, oil prices and gold volatility. However, the direction and statistical precision of the response vary by methodology and asset class.
+Overall, the evidence suggests that Iran War Risk in 2026 is most clearly reflected in longer-term Treasury yields and oil prices. The results differ from the traditional Iraq-era flight-to-quality pattern because Iran risk may operate through inflation, energy supply, sovereign-debt concerns, and weaker demand for Treasuries as safe assets.
 
-The empirical comparison shows why no single measure of war risk is uniformly superior. NLP provides a transparent daily signal, while identification through heteroskedasticity reduces reliance on treating that signal as an error-free measure of the latent geopolitical factor.
+Identification through heteroskedasticity remains the appropriate primary replication method, while direct NLP regressions and the three-regime analysis provide necessary robustness and interpretation.
 """
         ),
         markdown(
             r"""
-#### References
+## References
 
-Rigobon, R. (2003). Identification through Heteroskedasticity. *The Review of Economics and Statistics*, 85(4), 777-792.
+Rigobon, R. (2003). Identification through Heteroskedasticity. *The Review of Economics and Statistics*, 85(4), 777–792.
 
 Rigobon, R., and Sack, B. (2003). The Effects of War Risk on U.S. Financial Markets. *NBER Working Paper No. 9609*.
 
-Caldara, D., and Iacoviello, M. (2022). Measuring Geopolitical Risk. *American Economic Review*, 112(4), 1194-1225.
+Caldara, D., and Iacoviello, M. (2022). Measuring Geopolitical Risk. *American Economic Review*, 112(4), 1194–1225.
 """
         ),
     ]
@@ -951,7 +972,10 @@ Caldara, D., and Iacoviello, M. (2022). Measuring Geopolitical Risk. *American E
     )
 
     print(f"Final notebook created: {OUTPUT_PATH}")
-    print(f"Notebook cells: {len(notebook['cells'])}")
+    print(
+        f"Notebook cells: "
+        f"{len(notebook['cells'])}"
+    )
 
 
 if __name__ == "__main__":

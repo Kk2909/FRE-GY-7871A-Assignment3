@@ -1,11 +1,13 @@
 Financial Variable,Units,Estimator 1,Estimator 2,Combined IV,95% CI Low,95% CI High,Significant at 5%
-10-Year Treasury Yield,Basis-point change,-7.054,-7.144,-6.944,-11.855,-3.681,True
-S&P 500,Percent change,-1.054,-2.331,-1.442,-4.227,1.67,False
-Global Equity,Percent change,-1.094,-1.972,-1.351,-3.938,1.806,False
-Investment-Grade Bonds,Percent change,0.014,-24.264,0.344,-0.116,1.365,False
-High-Yield Bonds,Percent change,-0.053,-0.345,-0.069,-0.541,0.777,False
-Inflation-Linked Bonds,Percent change,0.134,-0.7,0.333,0.09,1.074,True
-Brent Oil,Percent change,-8.165,-9.426,-9.155,-22.633,8.213,False
-Gold,Percent change,-0.664,-154.321,-5.611,-53.241,41.656,False
-U.S. Dollar Index,Percent change,0.217,3.101,0.473,-1.592,2.158,False
-VIX,Percent change,8.449,32.089,13.558,-24.355,40.274,False
+10-Year Treasury Yield,Basis-point change,9.162,9.096,9.046,3.63,12.075,True
+S&P 500,Percent change,-0.312,1.92,-0.472,-2.541,1.89,False
+Global Equity,Percent change,-0.615,0.716,-0.751,-3.952,2.031,False
+Investment-Grade Bonds,Percent change,-0.342,-0.204,-0.381,-1.442,0.312,False
+High-Yield Bonds,Percent change,-0.155,0.161,-0.22,-1.095,0.13,False
+Inflation-Linked Bonds,Percent change,-0.136,0.603,-0.321,-1.206,-0.062,True
+Brent Oil,Percent change,8.12,5.969,5.324,-1.221,7.356,False
+Gold,Percent change,-1.245,-14.693,-1.754,-12.268,6.015,False
+U.S. Dollar Index,Percent change,-0.096,-9.074,-0.553,-2.833,1.617,False
+VIX,Percent change,5.894,14.237,6.368,-16.741,25.356,False
+IG Credit Excess-Return Proxy,Percent change,-0.206,0.101,-0.177,-1.008,1.056,False
+HY Credit Excess-Return Proxy,Percent change,-0.02,5.31,0.036,-1.616,0.921,False

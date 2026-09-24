@@ -8,6 +8,7 @@ from pandas.tseries.offsets import BDay
 INPUT_PATH = Path("data/processed/iran_news_scored.csv")
 OUTPUT_PATH = Path("data/processed/daily_iran_war_risk.csv")
 TOP_DAYS_PATH = Path("outputs/tables/high_war_news_days.csv")
+SAMPLE_START = pd.Timestamp("2026-02-28")
 
 
 def assign_market_date(timestamp: pd.Timestamp):
@@ -93,6 +94,11 @@ def main():
     )
 
     news = news.dropna(subset=["market_date"]).copy()
+    news = news[
+        news["market_date"] >= SAMPLE_START
+    ].copy()
+
+
 
     daily = (
         news.groupby("market_date")

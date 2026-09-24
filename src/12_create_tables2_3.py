@@ -25,7 +25,7 @@ TABLE_3_PATH = Path(
 )
 
 ANCHOR = "d_five_year_yield"
-ANCHOR_SHOCK = -0.10
+ANCHOR_SHOCK = 0.10
 
 VARIABLE_LABELS = {
     "d_five_year_yield": "5-Year Treasury Yield",
@@ -39,6 +39,8 @@ VARIABLE_LABELS = {
     "r_gold": "Gold",
     "r_dollar_index": "U.S. Dollar Index",
     "r_vix": "VIX",
+    "r_ig_credit_proxy": "IG Credit Excess-Return Proxy",
+    "r_hy_credit_proxy": "HY Credit Excess-Return Proxy",
 }
 
 

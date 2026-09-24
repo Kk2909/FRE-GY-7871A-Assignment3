@@ -10,7 +10,7 @@ MARKET_PATH = Path("data/processed/market_changes.csv")
 
 SAMPLE_PATH = Path("data/processed/estimation_sample.csv")
 MATCHES_PATH = Path("outputs/tables/matched_news_days.csv")
-
+SAMPLE_START = pd.Timestamp("2026-02-28")
 
 def main():
     risk = pd.read_csv(
@@ -29,6 +29,10 @@ def main():
         right_on="market_date",
         how="inner",
     )
+
+    data = data[
+        data["date"] >= SAMPLE_START
+    ].copy()
 
     data = (
         data.sort_values("date")

@@ -28,6 +28,8 @@ MARKET_VARIABLES = {
     "r_gold": "Gold",
     "r_dollar_index": "U.S. Dollar Index",
     "r_vix": "VIX",
+    "r_ig_credit_proxy": "IG Credit Excess-Return Proxy",
+    "r_hy_credit_proxy": "HY Credit Excess-Return Proxy",
 }
 
 

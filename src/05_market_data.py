@@ -135,8 +135,22 @@ def main():
             )
         )
 
+    # Corporate bond excess-return proxies for credit conditions.
+    # Negative values indicate weaker corporate credit performance
+    # relative to inflation-linked Treasury bonds.
+    
+    changes["r_ig_credit_proxy"] = (
+        changes["r_investment_grade_bonds"]
+        - changes["r_inflation_linked_bonds"]
+    )
+
+    changes["r_hy_credit_proxy"] = (
+        changes["r_high_yield_bonds"]
+        - changes["r_inflation_linked_bonds"]
+    )
+
     changes = changes.loc[
-        "2026-01-01":"2026-09-18"
+        "2026-02-28":"2026-09-18"
     ]
 
     changes.index.name = "date"

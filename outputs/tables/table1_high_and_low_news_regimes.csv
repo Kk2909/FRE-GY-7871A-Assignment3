@@ -1,39 +1,31 @@
 Date,Regime,NLP Risk Score,News Direction,Article Count,Mean Relevance,Top-10 Intensity,Uncertainty Rate,Primary Event,Primary Source
-2026-01-29,High variance,1.6704,Escalation,62,0.5252,0.3833,0.6725,Tensions bubble between U.S. and Iran as nuclear talks stall,MS NOW
-2026-01-30,High variance,1.2245,Escalation,30,0.5476,0.3623,0.8322,US-Iran tensions: The diplomatic scramble to prevent a war,Al Jazeera
-2026-02-02,High variance,2.021,Escalation,52,0.5507,0.4013,0.4717,Iran threatens a regional war if US follows through on threat to strike,WBFF
-2026-02-03,High variance,1.2878,Escalation,42,0.5204,0.3614,1.0,"Iran risks Trump's ire with new diplomatic demands, provocations",Axios
-2026-02-05,High variance,0.9561,De-escalation,39,0.548,0.3643,0.2121,Why Iran–US negotiations must move beyond a single-issue approach to the nuclear problem,Bulletin of the Atomic Scientists
-2026-02-06,High variance,1.0009,Mixed or unclear,50,0.5037,0.3605,0.4839,"Iran anticipates more negotiations with the US, citing a 'positive atmosphere' during talks in Oman",lemonde.fr
-2026-02-09,High variance,1.1761,Mixed or unclear,63,0.4992,0.3513,1.2788,"U.S.-Iran Talks Ease Tensions, but Achieve Few Tangible Gains",The Soufan Center
-2026-02-17,High variance,0.9757,De-escalation,50,0.5291,0.3662,0.1562,Iran and US move forward in talks but tensions linger,Iran International
-2026-02-26,High variance,1.8755,De-escalation,52,0.5361,0.3769,1.3846,U.S. and Iran wrap up 'most intense' nuclear talks with no deal — more negotiations ahead,CNBC
-2026-03-02,High variance,1.0748,Escalation,113,0.5109,0.3661,0.3554,"Trump’s war on Iran: grave dangers and, at best, limited benefits",Bulletin of the Atomic Scientists
-2026-03-19,High variance,1.0949,Escalation,47,0.4978,0.3442,1.4692,How striking Iran’s nuclear power plant may impact the entire region,CNN
-2026-04-15,High variance,1.1574,Escalation,42,0.5214,0.3533,1.145,"Pakistani delegation in Tehran aims to ease tensions, arrange U.S.-Iran talks",spectrumlocalnews.com
-2026-05-20,High variance,1.1226,Escalation,44,0.4804,0.3648,0.5133,Iran threatens to extend conflict ‘beyond the region’ if U.S. and Israel resume attacks,CNBC
-2026-06-29,High variance,1.0799,Escalation,72,0.5167,0.3671,0.3155,Iran Risks Peace Talks With U.S. to Maintain Leverage Over Strait,The New York Times
-2026-07-08,High variance,1.082,Escalation,86,0.5003,0.3659,0.377,Why are the US and Iran fighting again? The feud that keeps threatening peace talks,KCRA
-2026-07-09,High variance,1.4556,Escalation,68,0.5109,0.3814,0.3482,Renewed US-Iran hostilities highlight Tehran's deep mistrust of negotiations,lemonde.fr
-2026-07-30,High variance,1.4586,Escalation,45,0.5085,0.374,0.7168,Tehran tests a more confrontational strategy,Iran International
-2026-08-25,High variance,0.9477,Escalation,81,0.5015,0.3578,0.512,"Iran vows retaliation after U.S. widens sanctions, fueling fears of escalated war",NBC News
-2026-09-02,High variance,1.036,Escalation,51,0.4808,0.3619,0.4862,The Iran Conflict,Ipsos
-2026-01-21,Matched low variance,-0.8731,Escalation,18,0.4887,0.2867,0.4525,"US, Iran exchange threats of broadscale war in latest sabre rattling",Al Jazeera
-2026-01-22,Matched low variance,-1.7553,Escalation,17,0.4923,0.2609,0.0,Are nuclear issues at the heart of the Russia-Iran relationship?,Sciences Po
-2026-01-23,Matched low variance,-0.5356,Escalation,24,0.5039,0.288,1.049,Opinion | A nightmare scenario for Iran,washingtonpost.com
-2026-01-27,Matched low variance,-0.9694,Escalation,23,0.4922,0.277,0.7435,Iran’s President Pezeshkian warns of regional instability amid US threats,Al Jazeera
-2026-02-10,Matched low variance,-0.0317,Escalation,24,0.5005,0.3008,1.3986,Iran Regime Attempts Creative Negotiating Stance,cfr.org
-2026-02-11,Matched low variance,-0.1102,Escalation,41,0.4918,0.3064,0.9756,What War With Iran Would Look Like,Foreign Policy
-2026-02-13,Matched low variance,-1.3972,Mixed or unclear,14,0.4746,0.2416,1.6438,Trump warns Iran of ‘very traumatic’ outcome if no nuclear deal,arabnews.jp
-2026-02-18,Matched low variance,-0.3767,De-escalation,21,0.5251,0.3075,0.4008,6 reasons the U.S. and Iran are on the brink of war,Axios
-2026-02-24,Matched low variance,-0.6543,Escalation,16,0.5242,0.2938,0.5319,A timeline of tensions over Iran's nuclear program as talks with U.S. approach,PBS
-2026-03-04,Matched low variance,-0.5539,Escalation,21,0.4767,0.2856,1.1299,"Scholars Discuss Causes, Possible Outcomes of War in Iran",Dartmouth
-2026-03-18,Matched low variance,-0.1675,Escalation,47,0.4813,0.3067,0.8489,Inside story: Anatomy of the breakdown of Iran-US diplomacy,Amwaj.media
-2026-04-21,Matched low variance,-0.1576,Escalation,52,0.4903,0.3045,0.9764,Iran talks on hold over Trump's blockade,Politico
-2026-05-19,Matched low variance,-0.9625,Escalation,44,0.4798,0.2845,0.3861,"No deal, no exit: How US-Iran standoff risks fresh conflict",Reuters
-2026-06-30,Matched low variance,-0.2986,De-escalation,23,0.4755,0.2967,1.0811,Iran’s Diverging Priorities Are Jeopardizing U.S. Peace Talks,WSJ
-2026-07-06,Matched low variance,-1.1651,Escalation,29,0.4787,0.279,0.2621,How the Iran War Weighs on the U.S.-Saudi Partnership and Prospects for Normalization with Israel,CSIS | Center for Strategic and International Studies
-2026-07-07,Matched low variance,-0.1417,Escalation,45,0.493,0.325,0.0,What’s the latest in the US-Iran conflict?,Next Century Foundation
-2026-07-31,Matched low variance,-1.2928,Escalation,16,0.4889,0.2589,1.0,"As diplomacy falters, US-Iran war expands: ANALYSIS","ABC News - Breaking News, Latest News and Videos"
-2026-08-26,Matched low variance,-0.224,Mixed or unclear,44,0.4715,0.311,0.5277,The Iran War Is Disrupting Trade Connectivity Across Eurasia,The Diplomat – Asia-Pacific Current Affairs Magazine
-2026-09-04,Matched low variance,-2.0347,Escalation,16,0.4678,0.2405,0.4577,Arab diplomats fear Iran is widening the war — and there’s no way out,Politico
+2026-03-02,High variance,1.2306,Escalation,113,0.5109,0.3661,0.3554,"Trump’s war on Iran: grave dangers and, at best, limited benefits",Bulletin of the Atomic Scientists
+2026-03-19,High variance,1.2537,Escalation,47,0.4978,0.3442,1.4692,How striking Iran’s nuclear power plant may impact the entire region,CNN
+2026-04-15,High variance,1.3226,Escalation,42,0.5214,0.3533,1.145,"Pakistani delegation in Tehran aims to ease tensions, arrange U.S.-Iran talks",spectrumlocalnews.com
+2026-05-20,High variance,1.2836,Escalation,44,0.4804,0.3648,0.5133,Iran threatens to extend conflict ‘beyond the region’ if U.S. and Israel resume attacks,CNBC
+2026-05-25,High variance,1.0227,Mixed or unclear,90,0.52,0.3517,0.6935,Iran Talks Bog Down Over Nuclear Program and Sanctions Relief,WSJ
+2026-06-08,High variance,1.0573,Escalation,71,0.5091,0.3647,0.1168,What Iran and Israel’s escalation means for efforts to end regional conflict,PBS
+2026-06-18,High variance,1.0397,De-escalation,68,0.4964,0.3518,0.7181,What's in the deal between the US and Iran?,BBC
+2026-06-29,High variance,1.2362,Escalation,72,0.5167,0.3671,0.3155,Iran Risks Peace Talks With U.S. to Maintain Leverage Over Strait,The New York Times
+2026-07-08,High variance,1.2387,Escalation,86,0.5003,0.3659,0.377,Why are the US and Iran fighting again? The feud that keeps threatening peace talks,KCRA
+2026-07-09,High variance,1.652,Escalation,68,0.5109,0.3814,0.3482,Renewed US-Iran hostilities highlight Tehran's deep mistrust of negotiations,lemonde.fr
+2026-07-30,High variance,1.6556,Escalation,45,0.5085,0.374,0.7168,Tehran tests a more confrontational strategy,Iran International
+2026-08-25,High variance,1.09,Escalation,81,0.5015,0.3578,0.512,"Iran vows retaliation after U.S. widens sanctions, fueling fears of escalated war",NBC News
+2026-08-31,High variance,0.9242,Escalation,73,0.4954,0.3531,0.4502,Dire Strait: Why Economic Threats Might Escalate the War in Iran,time.com
+2026-09-02,High variance,1.1878,Escalation,51,0.4808,0.3619,0.4862,The Iran Conflict,Ipsos
+2026-09-07,High variance,1.0678,Escalation,58,0.4845,0.3475,0.9768,Trump’s blockade pushes Iran toward military escalation,CNN
+2026-03-04,Matched low variance,-0.5712,Escalation,21,0.4767,0.2856,1.1299,"Scholars Discuss Causes, Possible Outcomes of War in Iran",Dartmouth
+2026-03-18,Matched low variance,-0.1437,Escalation,47,0.4813,0.3067,0.8489,Inside story: Anatomy of the breakdown of Iran-US diplomacy,Amwaj.media
+2026-04-21,Matched low variance,-0.1327,Escalation,52,0.4903,0.3045,0.9764,Iran talks on hold over Trump's blockade,Politico
+2026-05-19,Matched low variance,-1.0239,Escalation,44,0.4798,0.2845,0.3861,"No deal, no exit: How US-Iran standoff risks fresh conflict",Reuters
+2026-05-22,Matched low variance,-0.5902,De-escalation,26,0.4791,0.29,0.8785,Progress in Iran talks undercut over uranium and Strait of Hormuz tolls,The Japan Times
+2026-06-09,Matched low variance,-0.0238,Escalation,38,0.5016,0.3165,0.5775,"Uncertainty around US-Iran talks, and other geopolitical stories to know this month",The World Economic Forum
+2026-06-17,Matched low variance,-0.8425,Mixed or unclear,30,0.5095,0.2935,0.2635,A history of Iran’s nuclear program and tensions with the US as an interim deal is signed,AP News
+2026-06-30,Matched low variance,-0.2887,De-escalation,23,0.4755,0.2967,1.0811,Iran’s Diverging Priorities Are Jeopardizing U.S. Peace Talks,WSJ
+2026-07-06,Matched low variance,-1.2482,Escalation,29,0.4787,0.279,0.2621,How the Iran War Weighs on the U.S.-Saudi Partnership and Prospects for Normalization with Israel,CSIS | Center for Strategic and International Studies
+2026-07-07,Matched low variance,-0.1158,Escalation,45,0.493,0.325,0.0,What’s the latest in the US-Iran conflict?,Next Century Foundation
+2026-07-31,Matched low variance,-1.3889,Escalation,16,0.4889,0.2589,1.0,"As diplomacy falters, US-Iran war expands: ANALYSIS","ABC News - Breaking News, Latest News and Videos"
+2026-08-26,Matched low variance,-0.2065,Escalation,44,0.4715,0.311,0.5277,The Iran War Is Disrupting Trade Connectivity Across Eurasia,The Diplomat – Asia-Pacific Current Affairs Magazine
+2026-08-28,Matched low variance,-0.4331,Escalation,24,0.5098,0.3136,0.0,How the Iran war has made the US more vulnerable,Politico
+2026-09-04,Matched low variance,-2.2104,Escalation,16,0.4678,0.2405,0.4577,Arab diplomats fear Iran is widening the war — and there’s no way out,Politico
+2026-09-09,Matched low variance,-0.1668,Escalation,66,0.4456,0.3133,0.4828,Iran Signals Readiness to Escalate Fight in Face of Rising U.S. Pressure,The New York Times

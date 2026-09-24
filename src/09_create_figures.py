@@ -102,6 +102,8 @@ def plot_variance_ratios():
         "r_gold": "Gold",
         "r_dollar_index": "U.S. Dollar Index",
         "r_vix": "VIX",
+        "r_ig_credit_proxy": "IG Credit Excess-Return Proxy",
+        "r_hy_credit_proxy": "HY Credit Excess-Return Proxy",
     }
 
     diagnostics["label"] = (
@@ -158,11 +160,11 @@ def plot_market_effects():
     ].copy()
 
     effects = effects.sort_values(
-        "effect_of_10bp_yield_drop"
+        "effect_of_10bp_yield_increase"
     )
 
     estimate = effects[
-        "effect_of_10bp_yield_drop"
+        "effect_of_10bp_yield_increase"
     ].to_numpy()
 
     lower_error = np.maximum(

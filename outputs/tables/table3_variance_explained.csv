@@ -1,12 +1,14 @@
 Financial Variable,Variance on Low Days,Variance on High Days,Predicted Change in Variance,Explained on High Days (%),Explained in Full Sample (%)
-5-Year Treasury Yield,0.00144,0.00243,,,
-10-Year Treasury Yield,0.00124,0.00174,0.00048,27.53,2.99
-S&P 500,0.40689,0.65055,0.20613,31.69,3.18
-Global Equity,0.57695,0.79082,0.18097,22.88,2.19
-Investment-Grade Bonds,0.10655,0.07394,0.01174,15.88,1.0
-High-Yield Bonds,0.03695,0.03877,0.00047,1.2,0.08
-Inflation-Linked Bonds,0.04066,0.03138,0.01098,34.98,2.42
-Brent Oil,3.04766,10.67887,8.31089,77.83,5.69
-Gold,1.76258,11.92557,3.12165,26.18,8.87
-U.S. Dollar Index,0.13955,0.20639,0.02218,10.75,2.01
-VIX,39.09464,65.97745,18.22514,27.62,3.26
+5-Year Treasury Yield,0.00114,0.00268,,,
+10-Year Treasury Yield,0.00083,0.00211,0.00126,59.72,6.43
+S&P 500,0.46123,0.36889,0.03428,9.29,0.44
+Global Equity,0.59771,0.52977,0.08699,16.42,0.84
+Investment-Grade Bonds,0.08736,0.09813,0.02241,22.83,1.44
+High-Yield Bonds,0.04465,0.0408,0.00744,18.23,0.9
+Inflation-Linked Bonds,0.04808,0.03547,0.01586,44.72,2.78
+Brent Oil,3.23177,10.70532,4.37114,40.83,2.19
+Gold,1.33958,4.16043,0.47437,11.4,1.59
+U.S. Dollar Index,0.06882,0.20305,0.04719,23.24,3.94
+VIX,37.23716,49.7146,6.25221,12.58,1.15
+IG Credit Excess-Return Proxy,0.04741,0.04422,0.00481,10.88,0.69
+HY Credit Excess-Return Proxy,0.04417,0.02797,0.0002,0.73,0.04

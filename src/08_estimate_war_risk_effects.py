@@ -8,7 +8,7 @@ INPUT_PATH = Path("data/processed/estimation_sample.csv")
 OUTPUT_PATH = Path("outputs/tables/war_risk_estimates.csv")
 
 ANCHOR = "d_five_year_yield"
-ANCHOR_SHOCK = -0.10
+ANCHOR_SHOCK = 0.10
 N_BOOTSTRAP = 2000
 RANDOM_SEED = 42
 
@@ -23,6 +23,8 @@ TARGETS = {
     "r_gold": "Gold",
     "r_dollar_index": "U.S. Dollar Index",
     "r_vix": "VIX",
+    "r_ig_credit_proxy": "IG Credit Excess-Return Proxy",
+    "r_hy_credit_proxy": "HY Credit Excess-Return Proxy",
 }
 
 
@@ -265,7 +267,7 @@ def main():
                 "combined_estimator": estimate[
                     "combined_estimator"
                 ],
-                "effect_of_10bp_yield_drop": normalized_effect,
+                "effect_of_10bp_yield_increase": normalized_effect,
                 "bootstrap_standard_error": standard_error,
                 "confidence_low": confidence_low,
                 "confidence_high": confidence_high,
@@ -294,7 +296,7 @@ def main():
             "estimator_1",
             "estimator_2",
             "combined_estimator",
-            "effect_of_10bp_yield_drop",
+            "effect_of_10bp_yield_increase",
             "confidence_low",
             "confidence_high",
             "statistically_significant",
@@ -312,7 +314,7 @@ def main():
 
     print(
         "Estimated response to a 10-basis-point "
-        "decline in the five-year Treasury yield:\n"
+        "increase in the five-year Treasury yield:\n"
     )
 
     print(display.to_string(index=False))

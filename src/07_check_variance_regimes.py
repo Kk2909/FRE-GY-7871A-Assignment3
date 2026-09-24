@@ -20,6 +20,8 @@ MARKET_VARIABLES = [
     "r_gold",
     "r_dollar_index",
     "r_vix",
+    "r_ig_credit_proxy",
+    "r_hy_credit_proxy",
 ]
 
 
